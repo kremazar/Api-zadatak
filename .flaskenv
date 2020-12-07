@@ -1,0 +1,2 @@
+FLASK_APP=zadatak.py
+FLASK_DEBUG=1
