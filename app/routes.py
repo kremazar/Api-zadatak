@@ -99,3 +99,39 @@ def neprati(id):
     current_user.unfollow(user)
     db.session.commit()
     return 'unfollow'
+
+
+@app.route('/posts')
+def posts():
+    posts = Objava.query.all()
+    return {"data": [
+        {"id": doc.id, "body": doc.tekst, "user_id": doc.user_id, }
+        for doc in posts
+    ]}
+
+
+@app.route('/search_user/<username>', methods=['GET', 'POST'])
+def search_user(username):
+    search = User.query.filter_by(username=username).first()
+    return {"data": [
+        {"id": search.id, "username": search.username}
+    ]}
+
+
+@app.route('/search_post/<post>')
+def search_post(post):
+    search = Objava.query.filter_by(tekst=post).all()
+    return {"data": [
+        {"id": doc.id, "body": doc.tekst, "user_id": doc.user_id, }
+        for doc in search
+    ]}
+
+
+@app.route('/recommendation')
+def recommendation():
+    count = User.query.count()
+    id = randint(1, count)
+    user = User.query.filter_by(id=id).first()
+    return {"data": [
+        {"id": user.id, "body": user.username}
+    ]}
